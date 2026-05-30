@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  e2e-test:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - DISPLAY=:99
+    command: make test-e2e

@@ -1,0 +1,9 @@
+*.elc
+*.png
+*.svg
+*.pdf
+*~
+\#*\#
+.DS_Store
+node_modules/
+.venv/

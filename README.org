@@ -1,0 +1,98 @@
+# agent-shell-org-render
+
+Org-style overlay rendering for agent-shell viewport buffers.
+
+## Features
+
+- **Org-style headers**: `## Title` → `** Title` (org-level-N face)
+- **Org-style bold**: `**bold**` → `*bold*` (org-bold face)
+- **Org-style italic**: `*italic*` → `/italic/` (org-italic face)
+- **Org-style code**: `` `code` `` → `=code=` (org-code face)
+- **Org-style links**: `[text](url)` → `[[url][text]]` (org-link face)
+- **Org-style blocks**: ```` ```lang ```` → `#+begin_src lang` / `#+end_src`
+- **LaTeX rendering**: `$E=mc^2$` → image overlay
+- **Mermaid diagrams**: ```` ```mermaid ```` → PNG overlay
+- **Ditaa diagrams**: ```` ```ditaa ```` → PNG overlay
+- **TikZ diagrams**: ```` ```tikz ```` → PNG overlay
+- **Cursor reveal**: markup characters appear when cursor enters overlay region
+- **Toggle**: `C-c C-r` to switch between org and markdown rendering
+
+## Installation
+
+```elisp
+(use-package agent-shell-org-render
+  :straight (:host github :repo "YOUR-USERNAME/agent-shell-org-render")
+  :after agent-shell
+  :config
+  (setq agent-shell-org-render-auto-apply-in-viewport t
+        agent-shell-org-render-enable-images t
+        agent-shell-org-render-mermaid-backend 'api)
+  :bind (:map agent-shell-viewport-view-mode-map
+              ("C-c C-r" . agent-shell-org-render-toggle)))
+```
+
+## Usage
+
+1. Open agent-shell viewport: `C-c C-o` from shell buffer
+2. Org rendering auto-applies (if `auto-apply-in-viewport` is t)
+3. Toggle between org/markdown: `C-c C-r`
+4. Cursor reveal: move cursor over overlay to see markup characters
+
+## Customization
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `agent-shell-org-render-enable-images` | `t` | Whether to render LaTeX, Mermaid, Ditaa blocks as images |
+| `agent-shell-org-render-mermaid-backend` | `'api` | Mermaid rendering backend: `'cli`, `'api`, or `nil` |
+| `agent-shell-org-render-latex-process` | `'dvipng` | LaTeX rendering process: `'dvipng`, `'dvisvgm`, or `nil` |
+| `agent-shell-org-render-auto-apply-in-viewport` | `t` | Auto-apply org rendering when viewport opens |
+
+## Development
+
+### TDD Workflow
+
+1. Write failing test (RED)
+2. Implement minimum code to pass (GREEN)
+3. Refactor (REFACTOR)
+4. Commit
+5. Request code review
+6. Fix review comments
+7. Re-test → pass = complete, fail = back to step 2
+
+### Running Tests
+
+```bash
+# Unit tests
+make test-unit
+
+# Integration tests
+make test-integration
+
+# E2E tests (Docker)
+make docker-e2e
+
+# All tests
+make test
+```
+
+### Project Structure
+
+```
+agent-shell-org-render/
+├── agent-shell-org-render.el      ;; Main package
+├── Makefile                       ;; Build/test commands
+├── Dockerfile                     ;; E2E test environment
+├── opencode.json                  ;; OpenCode agent config
+├── README.org                     ;; Documentation
+├── LICENSE                        ;; GPL-3.0
+└── tests/
+    ├── test-org-render-core.el    ;; Unit tests (ERT)
+    ├── test-org-render-integration.el ;; Integration tests
+    ├── test-e2e-docker.el         ;; Docker E2E tests
+    └── fixtures/
+        └── sample-markdown.md     ;; Test fixtures
+```
+
+## License
+
+GPL-3.0
