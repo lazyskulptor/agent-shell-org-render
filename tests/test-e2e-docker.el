@@ -44,6 +44,7 @@
       ;; Verify header overlays
       (goto-char (point-min))
       (search-forward "Main Title")
+      (backward-char)
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'face) 'org-level-1))
                         (overlays-at (point))))
@@ -51,6 +52,7 @@
       ;; Verify bold overlays
       (goto-char (point-min))
       (search-forward "bold")
+      (backward-char)
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'face) 'bold))
                         (overlays-at (point))))
@@ -58,6 +60,7 @@
       ;; Verify inline code overlays
       (goto-char (point-min))
       (search-forward "inline code")
+      (backward-char)
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'face) 'font-lock-doc-markup-face))
                         (overlays-at (point)))))))
@@ -77,6 +80,7 @@
     
     (goto-char (point-min))
     (search-forward "```")
+    (backward-char)
     (let ((ovs (overlays-at (point))))
       (should ovs)
       (should (seq-find (lambda (ov)
@@ -96,6 +100,7 @@
     
     (goto-char (point-min))
     (search-forward "Example")
+    (backward-char)
     (let ((ovs (overlays-at (point))))
       (should ovs)
       (should (seq-find (lambda (ov)
@@ -114,6 +119,7 @@
     (agent-shell-org-render-put)
     (goto-char (point-min))
     (search-forward "bold")
+    (backward-char)
     (let ((ovs (overlays-at (point))))
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'face) 'bold))
@@ -149,8 +155,8 @@
     (agent-shell-org-render-put)
     
     ;; Find inline code outside block
-    (goto-char (point-min))
-    (search-forward "`code` outside")
+    (goto-char (point-max))
+    (search-backward "code")
     (let ((ovs (overlays-at (point))))
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'category) 'agent-shell-org-render))

@@ -1,7 +1,7 @@
 .PHONY: test test-unit test-integration test-e2e docker-e2e clean lint
 
 EMACS ?= emacs
-BATCH_FLAGS = --batch -Q
+BATCH_FLAGS = --batch -Q -L .
 
 # 단위 테스트 (빠른 피드백)
 test-unit:

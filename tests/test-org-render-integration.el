@@ -23,6 +23,10 @@
   "Mock markdown overlays put."
   nil)
 
+(defun agent-shell-viewport-view-mode ()
+  "Mock viewport view mode."
+  (setq major-mode 'agent-shell-viewport-view-mode))
+
 ;; ─────────────────────────────────────────────
 ;; Advice Integration Tests
 ;; ─────────────────────────────────────────────
@@ -98,6 +102,7 @@
       ;; Check header overlays
       (goto-char (point-min))
       (search-forward "Main Title")
+      (backward-char)
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'face) 'org-level-1))
                         (overlays-at (point))))
@@ -105,6 +110,7 @@
       ;; Check bold overlays
       (goto-char (point-min))
       (search-forward "bold")
+      (backward-char)
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'face) 'bold))
                         (overlays-at (point))))
@@ -112,6 +118,7 @@
       ;; Check inline code overlays
       (goto-char (point-min))
       (search-forward "inline code")
+      (backward-char)
       (should (seq-find (lambda (ov)
                           (eq (overlay-get ov 'face) 'font-lock-doc-markup-face))
                         (overlays-at (point)))))))
