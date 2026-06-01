@@ -289,5 +289,33 @@
   "Package should provide 'agent-shell-org-render"
   (should (featurep 'agent-shell-org-render)))
 
+;; ─────────────────────────────────────────────
+;; Image Rendering Tests (Phase 9)
+;; ─────────────────────────────────────────────
+
+(ert-deftest org-render-latex-functions-exist ()
+  "LaTeX rendering functions should exist"
+  (should (fboundp 'agent-shell-org-render--latex-available-p))
+  (should (fboundp 'agent-shell-org-render--render-latex-inline)))
+
+(ert-deftest org-render-mermaid-functions-exist ()
+  "Mermaid rendering functions should exist"
+  (should (fboundp 'agent-shell-org-render--mermaid-available-p))
+  (should (fboundp 'agent-shell-org-render--render-mermaid-block)))
+
+(ert-deftest org-render-ditaa-functions-exist ()
+  "Ditaa rendering functions should exist"
+  (should (fboundp 'agent-shell-org-render--render-ditaa-block)))
+
+;; ─────────────────────────────────────────────
+;; Cursor Reveal Tests (Phase 10)
+;; ─────────────────────────────────────────────
+
+(ert-deftest org-render-cursor-sensor-exist ()
+  "Cursor reveal functions should exist"
+  (should (fboundp 'agent-shell-org-render--cursor-sensor-function))
+  (should (fboundp 'agent-shell-org-render--enable-cursor-sensor))
+  (should (fboundp 'agent-shell-org-render--disable-cursor-sensor)))
+
 (provide 'test-org-render-core)
 ;;; test-org-render-core.el ends here

@@ -612,6 +612,89 @@ When enabled, markdown syntax is rendered using org-style overlays."
     (agent-shell-org-render-put)))
 
 ;; ─────────────────────────────────────────────
+;; Image Rendering (Optional)
+;; ─────────────────────────────────────────────
+
+(defun agent-shell-org-render--latex-available-p ()
+  "Check if LaTeX image rendering is available."
+  (and agent-shell-org-render-latex-process
+       (executable-find (if (eq agent-shell-org-render-latex-process 'dvipng)
+                           "latex"
+                         "latex"))))
+
+(defun agent-shell-org-render--mermaid-available-p ()
+  "Check if Mermaid rendering is available."
+  (and agent-shell-org-render-mermaid-backend
+       (or (and (eq agent-shell-org-render-mermaid-backend 'cli)
+                (executable-find "mmdc"))
+           (eq agent-shell-org-render-mermaid-backend 'api))))
+
+(defun agent-shell-org-render--render-latex-inline (start end latex-string)
+  "Render LaTeX inline math as image overlay.
+START END are buffer positions, LATEX-STRING is the math content."
+  (when (agent-shell-org-render--latex-available-p)
+    ;; Stub: would generate image and apply display overlay
+    (agent-shell-org-render--put
+     (make-overlay start end)
+     'evaporate t
+     'org-render-markup-type 'latex
+     'display (format "[LaTeX: %s]" (substring latex-string 0 (min 20 (length latex-string)))))))
+
+(defun agent-shell-org-render--render-mermaid-block (start end body)
+  "Render Mermaid block as image overlay.
+START END are buffer positions, BODY is the diagram source."
+  (when (agent-shell-org-render--mermaid-available-p)
+    ;; Stub: would generate image and apply display overlay
+    (agent-shell-org-render--put
+     (make-overlay start end)
+     'evaporate t
+     'org-render-markup-type 'mermaid
+     'display "[Mermaid diagram]")))
+
+(defun agent-shell-org-render--render-ditaa-block (start end body)
+  "Render Ditaa block as image overlay.
+START END are buffer positions, BODY is the diagram source."
+  (when (executable-find "ditaa")
+    ;; Stub: would generate image and apply display overlay
+    (agent-shell-org-render--put
+     (make-overlay start end)
+     'evaporate t
+     'org-render-markup-type 'ditaa
+     'display "[Ditaa diagram]")))
+
+;; ─────────────────────────────────────────────
+;; Cursor Reveal (Optional)
+;; ─────────────────────────────────────────────
+
+(defun agent-shell-org-render--cursor-sensor-function (window prev-loc next-loc)
+  "Cursor sensor function to reveal markup when cursor enters.
+WINDOW PREV-LOC NEXT-LOC are cursor sensor arguments."
+  (let ((inhibit-read-only t))
+    (when next-loc
+      (dolist (ov (overlays-at next-loc))
+        (when (eq (overlay-get ov 'org-render-markup-type) 'header)
+          (overlay-put ov 'invisible nil))))
+    (when prev-loc
+      (dolist (ov (overlays-at prev-loc))
+        (when (eq (overlay-get ov 'org-render-markup-type) 'header)
+          (overlay-put ov 'invisible t))))))
+
+(defun agent-shell-org-render--enable-cursor-sensor ()
+  "Enable cursor-sensor-functions for reveal behavior."
+  (add-hook 'post-command-hook #'agent-shell-org-render--cursor-reveal nil t))
+
+(defun agent-shell-org-render--disable-cursor-sensor ()
+  "Disable cursor-sensor-functions."
+  (remove-hook 'post-command-hook #'agent-shell-org-render--cursor-reveal t))
+
+(defun agent-shell-org-render--cursor-reveal ()
+  "Reveal markup under cursor temporarily."
+  (let ((ovs (overlays-at (point))))
+    (dolist (ov ovs)
+      (when (overlay-get ov 'org-render-hidden-markup)
+        (overlay-put ov 'invisible nil)))))
+
+;; ─────────────────────────────────────────────
 ;; Provide
 ;; ─────────────────────────────────────────────
 

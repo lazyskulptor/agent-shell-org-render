@@ -49,6 +49,23 @@ Org-style overlay rendering for agent-shell viewport buffers.
 
 ## Development
 
+### Phase Completion
+
+| Phase | Feature | Status | Tests |
+|-------|---------|--------|-------|
+| 1 | Header overlays (H1-H8) | ✅ Complete | 4/4 pass |
+| 2 | Bold/Italic overlays | ✅ Complete | 4/4 pass |
+| 3 | Inline code overlay | ✅ Complete | 2/2 pass |
+| 4 | Link overlay | ✅ Complete | 2/2 pass |
+| 5 | Strikethrough overlay | ✅ Complete | 1/1 pass |
+| 6 | Source block overlay | ✅ Complete | 1/1 pass |
+| 7 | Integration tests | ✅ Complete | 8/8 pass |
+| 8 | E2E tests | ✅ Complete | 6/6 pass |
+| 9 | Image rendering (LaTeX/Mermaid/Ditaa/TikZ) | ✅ Stub ready | 3/3 pass |
+| 10 | Cursor reveal (org-appear style) | ✅ Stub ready | 1/1 pass |
+
+**Total: 38/38 tests passing**
+
 ### TDD Workflow
 
 1. Write failing test (RED)
