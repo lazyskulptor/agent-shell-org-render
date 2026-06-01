@@ -365,36 +365,39 @@ Returns an alist with details of all overlays added."
 (defun agent-shell-org-render--fontify-header (_start end level-start level-end title-start title-end)
   "Fontify a markdown header as org-style.
 Use START END LEVEL-START LEVEL-END TITLE-START TITLE-END."
-  ;; Hide markup before (## → invisible)
-  (agent-shell-org-render--put
-   (make-overlay level-start title-start)
-   'evaporate t
-   'org-render-markup-type 'header
-   'invisible t)
-  ;; Show title as org-level face
-  (agent-shell-org-render--put
-   (make-overlay title-start title-end)
-   'evaporate t
-   'face
-   (cond ((eq (- level-end level-start) 1) 'org-level-1)
-         ((eq (- level-end level-start) 2) 'org-level-2)
-         ((eq (- level-end level-start) 3) 'org-level-3)
-         ((eq (- level-end level-start) 4) 'org-level-4)
-         ((eq (- level-end level-start) 5) 'org-level-5)
-         ((eq (- level-end level-start) 6) 'org-level-6)
-         ((eq (- level-end level-start) 7) 'org-level-7)
-         ((eq (- level-end level-start) 8) 'org-level-8)
-         (t 'org-level-1)))
-  ;; Add newline after if needed
-  (when (< end (point-max))
-    (save-excursion
-      (goto-char end)
-      (unless (looking-at-p "\n")
-        (agent-shell-org-render--put
-         (make-overlay end end)
-         'evaporate t
-         'org-render-markup-type 'header
-         'after-string "\n")))))
+  (let ((level (cond ((eq (- level-end level-start) 1) 1)
+                     ((eq (- level-end level-start) 2) 2)
+                     ((eq (- level-end level-start) 3) 3)
+                     ((eq (- level-end level-start) 4) 4)
+                     ((eq (- level-end level-start) 5) 5)
+                     ((eq (- level-end level-start) 6) 6)
+                     ((eq (- level-end level-start) 7) 7)
+                     ((eq (- level-end level-start) 8) 8)
+                     (t 1)))
+        (face (intern (format "agent-shell-org-render-h%d" 1))))
+    ;; Hide markup before (## → invisible)
+    (agent-shell-org-render--put
+     (make-overlay level-start title-start)
+     'evaporate t
+     'org-render-markup-type 'header
+     'invisible t)
+    ;; Show title with custom face (bold + large + distinct color)
+    (agent-shell-org-render--put
+     (make-overlay title-start title-end)
+     'evaporate t
+     'face `(:weight bold :height ,(if (= level 1) 1.4 (if (= level 2) 1.2 1.1))
+              :foreground ,(nth (1- level) '("#E06C75" "#61AFEF" "#98C379" "#C678DD"
+                                             "#E5C07B" "#56B6C2" "#BE5046" "#ABB2BF"))))
+    ;; Add newline after if needed
+    (when (< end (point-max))
+      (save-excursion
+        (goto-char end)
+        (unless (looking-at-p "\n")
+          (agent-shell-org-render--put
+           (make-overlay end end)
+           'evaporate t
+           'org-render-markup-type 'header
+           'after-string "\n"))))))
 
 (defun agent-shell-org-render--fontify-bold (start end text-start text-end)
   "Fontify a markdown bold as org-style.
@@ -405,11 +408,11 @@ Use START END TEXT-START TEXT-END."
    'evaporate t
    'org-render-markup-type 'bold
    'invisible t)
-  ;; Show text as org-bold face
+  ;; Show text as bold
   (agent-shell-org-render--put
    (make-overlay text-start text-end)
    'evaporate t
-   'face 'bold)
+   'face '(:weight bold))
   ;; Hide markup after
   (agent-shell-org-render--put
    (make-overlay text-end end)
@@ -426,11 +429,11 @@ Use START END TEXT-START TEXT-END."
    'evaporate t
    'org-render-markup-type 'italic
    'invisible t)
-  ;; Show text as org-italic face
+  ;; Show text as italic
   (agent-shell-org-render--put
    (make-overlay text-start text-end)
    'evaporate t
-   'face 'italic)
+   'face '(:slant italic))
   ;; Hide markup after
   (agent-shell-org-render--put
    (make-overlay text-end end)
@@ -495,11 +498,11 @@ Use BODY-START BODY-END."
    'evaporate t
    'org-render-markup-type 'inline-code
    'invisible t)
-  ;; Show code body
+  ;; Show code body with distinct background
   (agent-shell-org-render--put
    (make-overlay body-start body-end)
    'evaporate t
-   'face 'font-lock-doc-markup-face))
+   'face '(:background "#2D2D2D" :foreground "#ABB2BF" :family "Monaco" :height 0.9)))
 
 (defun agent-shell-org-render--fontify-source-block (quotes1-start quotes1-end lang-start lang-end body-start body-end quotes2-start quotes2-end)
   "Fontify a source block as org-style.
