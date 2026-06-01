@@ -84,6 +84,8 @@ nil       - Disable LaTeX rendering"
   "Apply org-style overlays to current buffer.
 Returns an alist with details of all overlays added."
   (agent-shell-org-render-remove)
+  ;; Remove competing markdown overlays (shell-maker)
+  (remove-overlays (point-min) (point-max) 'category 'markdown-overlays)
   (let* ((source-blocks (agent-shell-org-render--source-blocks))
          (source-block-ranges (seq-map (lambda (block)
                                          (cons (car (map-elt block 'start))
