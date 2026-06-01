@@ -1,10 +1,10 @@
 ;;; agent-shell-org-render.el --- Org-style overlay rendering for agent-shell viewport  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2025
-;; Author: 
+;; Author: Hyeonjun Park
 ;; URL: https://github.com/YOUR-USERNAME/agent-shell-org-render
 ;; Version: 0.1.0
-;; Package-Requires: (emacs 29.1)
+;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: convenience, tools
 
 ;; This package is free software; you can redistribute it and/or modify
