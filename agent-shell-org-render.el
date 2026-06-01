@@ -162,8 +162,9 @@ Returns an alist with details of all overlays added."
   "Set multiple properties on OVERLAY via PROPS."
   (unless (= (mod (length props) 2) 0)
     (error "Props missing a property or value"))
+  (overlay-put overlay 'category agent-shell-org-render--overlay-category)
+  (overlay-put overlay 'priority 1000)
   (while props
-    (overlay-put overlay 'category agent-shell-org-render--overlay-category)
     (overlay-put overlay (pop props) (pop props))))
 
 ;; ─────────────────────────────────────────────
